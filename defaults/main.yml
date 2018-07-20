@@ -1,0 +1,6 @@
+---
+# defaults file for ansible-role-s3-cloudfront
+s3_bucket_name: test-s3-bucket991
+default_origin_domain_name: "{{ s3_bucket_name }}.s3-website-ap-northeast-1.amazonaws.com"
+default_root_object: index.html
+domain_name: "{{ s3_bucket_name }}.s3.amazonaws.com"

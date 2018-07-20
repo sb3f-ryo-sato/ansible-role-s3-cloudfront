@@ -1,0 +1,20 @@
+---
+# tasks file for ansible-role-s3-cloudfront
+- name: Create a CloudFront distribution
+  cloudfront_distribution:
+    default_origin_domain_name: "{{ default_origin_domain_name }}"
+    default_root_object: "{{ default_root_object }}"
+    origins:
+      - domain_name: "{{ domain_name }}"
+        s3_origin_access_identity_enabled: yes
+  register: distribution_result
+
+- name: Wait for OAI creation
+  pause:
+    seconds: 10
+
+- name: Deploy the new S3 bucket policy
+  s3_bucket:
+    name: "{{ s3_bucket_name }}"
+    policy: "{{ lookup('template', 's3_bucket_policy.json.j2') | to_json }}"
+  with_items: "{{ distribution_result.origins['items'] }}"
